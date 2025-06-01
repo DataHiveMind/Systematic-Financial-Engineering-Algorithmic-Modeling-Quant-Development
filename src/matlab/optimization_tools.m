@@ -160,3 +160,98 @@ function [r_grid, t, V] = vasicek_bond_pricing(r0, a, b, sigma, T, r_max, M, N, 
         V(end, n) = V(end-1, n);
     end
 end
+
+% --- Mean-Variance Portfolio Optimization (Quadratic Programming) ---
+function [w_opt, ret_opt, risk_opt] = mean_variance_optimization(mu, Sigma, target_ret)
+    % mu: expected returns, Sigma: covariance matrix, target_ret: target portfolio return
+    n = length(mu);
+    H = 2*Sigma;
+    f = zeros(n,1);
+    Aeq = [mu'; ones(1,n)];
+    beq = [target_ret; 1];
+    lb = zeros(n,1);
+    options = optimoptions('quadprog','Display','off');
+    w_opt = quadprog(H, f, [], [], Aeq, beq, lb, [], [], options);
+    ret_opt = mu' * w_opt;
+    risk_opt = sqrt(w_opt' * Sigma * w_opt);
+end
+
+% --- Newton-Raphson for Derivative Calibration (e.g., implied volatility) ---
+function sigma_star = calibrate_implied_vol(S, K, r, T, market_price, isCall)
+    % S: spot, K: strike, r: rate, T: time, market_price: observed price
+    % isCall: 1=call, 0=put
+    tol = 1e-6;
+    max_iter = 100;
+    sigma = 0.2; % initial guess
+    for i = 1:max_iter
+        [price, vega] = bs_price_vega(S, K, r, sigma, T, isCall);
+        diff = price - market_price;
+        if abs(diff) < tol
+            break;
+        end
+        sigma = sigma - diff / vega;
+    end
+    sigma_star = sigma;
+end
+
+function [price, vega] = bs_price_vega(S, K, r, sigma, T, isCall)
+    d1 = (log(S/K) + (r + 0.5*sigma^2)*T) / (sigma*sqrt(T));
+    d2 = d1 - sigma*sqrt(T);
+    if isCall
+        price = S * normcdf(d1) - K * exp(-r*T) * normcdf(d2);
+    else
+        price = K * exp(-r*T) * normcdf(-d2) - S * normcdf(-d1);
+    end
+    vega = S * normpdf(d1) * sqrt(T);
+end
+
+% --- Genetic Algorithm for Portfolio Optimization (Simple Example) ---
+function [best_w, best_sharpe] = ga_portfolio_optimization(mu, Sigma, n_pop, n_gen, rf)
+    % mu: expected returns, Sigma: covariance, n_pop: population size, n_gen: generations, rf: risk-free rate
+    n = length(mu);
+    pop = rand(n_pop, n);
+    for i = 1:n_pop
+        pop(i,:) = pop(i,:) / sum(pop(i,:));
+    end
+    best_sharpe = -Inf;
+    best_w = [];
+    for gen = 1:n_gen
+        fitness = zeros(n_pop,1);
+        for i = 1:n_pop
+            w = pop(i,:)';
+            ret = mu' * w;
+            risk = sqrt(w' * Sigma * w);
+            sharpe = (ret - rf) / risk;
+            fitness(i) = sharpe;
+            if sharpe > best_sharpe
+                best_sharpe = sharpe;
+                best_w = w;
+            end
+        end
+        % Selection
+        [~, idx] = sort(fitness, 'descend');
+        pop = pop(idx(1:round(n_pop/2)), :);
+        % Crossover & Mutation
+        while size(pop,1) < n_pop
+            parents = pop(randperm(size(pop,1),2), :);
+            alpha = rand;
+            child = alpha*parents(1,:) + (1-alpha)*parents(2,:);
+            % Mutation
+            if rand < 0.1
+                m_idx = randi(n);
+                child(m_idx) = abs(child(m_idx) + 0.1*randn);
+            end
+            child = child / sum(child);
+            pop = [pop; child];
+        end
+    end
+end
+
+% --- Reinforcement Learning Placeholder for Portfolio Allocation ---
+function [policy, rewards] = rl_portfolio_allocation(env, agent, episodes)
+    % env: environment, agent: RL agent, episodes: number of episodes
+    % Placeholder for RL-based portfolio allocation
+    policy = [];
+    rewards = [];
+    % Implement RL logic here (e.g., Q-learning, DDPG, PPO)
+end
