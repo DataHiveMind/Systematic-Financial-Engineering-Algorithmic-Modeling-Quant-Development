@@ -1,11 +1,17 @@
 # Systematic-Financial-Engineering-Algorithmic-Modeling-Quant-Development
 
 ## Overview
+
 This project is a comprehensive quantitative development framework combining risk modeling, derivatives pricing, stochastic interest rate analysis, portfolio optimization, backtesting, and machine learning algorithms. It integrates Python, R, MATLAB, KDB+/q, and Excel, ensuring diverse analytical techniques ranging from statistical modeling to numerical methods and financial engineering.
 
 This research-driven model applies multi-disciplinary quantitative finance to enhance pricing accuracy, improve risk management strategies, and optimize portfolio returns in high-frequency trading environments.
 
+## Contact Information
+
+For inquiries or collaboration, feel free to reach out: 📩 [Email: kennethlegare5@gmail.com](mailto:kennethlegare5@gmail.com)
+
 ## Problem Statement
+
 Financial markets are complex, driven by stochastic dynamics, volatility, and risk exposure. Hedge funds require robust quantitative models that can:
 
 - Accurately price derivatives using stochastic and Monte Carlo methods.
@@ -21,6 +27,7 @@ Financial markets are complex, driven by stochastic dynamics, volatility, and ri
 - Optimize database management and time-series analysis for financial datasets.
 
 ## Solutions
+
 To address these challenges, this project implements:
 
 - Option Pricing Models: Black-Scholes, Binomial Tree, and Monte Carlo methods.
@@ -38,6 +45,7 @@ To address these challenges, this project implements:
 - Financial Modeling in Excel: Monte Carlo simulations, risk assessment, and derivative pricing.
 
 ## Tech Stack
+
 The project leverages multiple programming languages, each focusing on specialized financial applications:
 
 - Python: Backtesting, machine learning, risk modeling.
@@ -49,19 +57,3 @@ The project leverages multiple programming languages, each focusing on specializ
 - KDB+/q: Time-series analytics, high-frequency market data structuring.
 
 - Excel: Financial modeling, Monte Carlo-based option pricing.
-
-## Contact Information
-For inquiries or collaboration, feel free to reach out: 📩 Email: kennethlegare5@gmail.com
-
-## Future Enhancements
-Future development plans include:
-
-- Deep Learning for Financial Predictions: Neural networks for volatility forecasting.
-
-- Advanced Algorithmic Trading Strategies: Implement systematic trading models.
-
-- Hedge Fund Portfolio Construction: Integrate quantitative optimization techniques.
-
-- Cross-Asset Modeling: Extend simulations to commodities, crypto, and fixed income.
-
-- High-Frequency Market Microstructure Analysis: Incorporate tick data strategies.
